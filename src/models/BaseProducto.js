@@ -18,6 +18,7 @@ const camposComunes = {
     },
     cantidad: {
         type: DataTypes.INTEGER,
+        defaultValue: 0
     }
 };
 

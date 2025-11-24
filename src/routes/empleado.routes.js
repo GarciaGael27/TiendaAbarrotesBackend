@@ -1,0 +1,92 @@
+const { Router } = require('express')
+const router = Router();
+const { getEmpleados, postEmpleado, getEmpleadoById } = require('../controllers/empleado.controller')
+
+/**
+ * @swagger
+ * tags:
+ *   name: Empleados
+ *   description: Gestión de empleados
+ */
+
+/**
+ * @swagger
+ * /api/empleado:
+ *   get:
+ *     summary: Obtener todos los empleados
+ *     tags: [Empleados]
+ *     description: Endpoint para obtener la lista completa de empleados
+ *     responses:
+ *       200:
+ *         description: Lista de empleados obtenida exitosamente
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Empleado'
+ *       500:
+ *         description: Error interno del servidor
+ */
+router.get('/', getEmpleados);
+
+/**
+ * @swagger
+ * /api/empleado:
+ *   post:
+ *     summary: Crear un nuevo empleado
+ *     tags: [Empleados]
+ *     description: Endpoint para registrar un nuevo empleado
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/Empleado'
+ *     responses:
+ *       201:
+ *         description: Empleado creado exitosamente
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 msg:
+ *                   type: string
+ *                   example: "Empleado guardado con éxito"
+ *                 data:
+ *                   $ref: '#/components/schemas/Empleado'
+ *       500:
+ *         description: Error al crear el empleado
+ */
+router.post('/', postEmpleado);
+
+/**
+ * @swagger
+ * /api/empleado/{id}:
+ *   get:
+ *     summary: Obtener empleado por CURP
+ *     tags: [Empleados]
+ *     description: Endpoint para obtener un empleado específico por su CURP
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: CURP del empleado
+ *     responses:
+ *       200:
+ *         description: Empleado encontrado exitosamente
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Empleado'
+ *       404:
+ *         description: Empleado no encontrado
+ *       500:
+ *         description: Error interno del servidor
+ */
+router.get('/:id', getEmpleadoById);
+
+module.exports = router;
