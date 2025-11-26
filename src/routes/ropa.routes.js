@@ -1,6 +1,6 @@
 const { Router } = require('express')
 const router = Router();
-const { getRopa, postRopa, getRopaById } = require('../controllers/ropa.controller')
+const { getRopa, postRopa, getRopaById, deleteRopa, updateRopa } = require('../controllers/ropa.controller')
 
 /**
  * @swagger
@@ -88,5 +88,79 @@ router.post('/', postRopa);
  *         description: Error interno del servidor
  */
 router.get('/:id', getRopaById);
+
+/**
+ * @swagger
+ * /api/ropa/{codigo_visual}:
+ *   delete:
+ *     summary: Eliminar producto de ropa por código visual
+ *     tags: [Ropa]
+ *     description: Endpoint para eliminar un producto de ropa específico por su código visual
+ *     parameters:
+ *       - in: path
+ *         name: codigo_visual
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: Código visual del producto de ropa (ej. ROP-00001)
+ *     responses:
+ *       200:
+ *         description: Producto de ropa eliminado exitosamente
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 msg:
+ *                   type: string
+ *                   example: "Producto de ropa ROP-00001 eliminado exitosamente"
+ *                 data:
+ *                   $ref: '#/components/schemas/Ropa'
+ *       404:
+ *         description: Producto de ropa no encontrado
+ *       500:
+ *         description: Error interno del servidor
+ */
+router.delete('/:codigo_visual', deleteRopa);
+
+/**
+ * @swagger
+ * /api/ropa/{codigo_visual}:
+ *   put:
+ *     summary: Actualizar producto de ropa por código visual
+ *     tags: [Ropa]
+ *     description: Endpoint para actualizar un producto de ropa específico por su código visual
+ *     parameters:
+ *       - in: path
+ *         name: codigo_visual
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: Código visual del producto de ropa (ej. ROP-00001)
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/Ropa'
+ *     responses:
+ *       200:
+ *         description: Producto de ropa actualizado exitosamente
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 msg:
+ *                   type: string
+ *                   example: "Producto de ropa ROP-00001 actualizado exitosamente"
+ *                 data:
+ *                   $ref: '#/components/schemas/Ropa'
+ *       404:
+ *         description: Producto de ropa no encontrado
+ *       500:
+ *         description: Error interno del servidor
+ */
+router.put('/:codigo_visual', updateRopa);
 
 module.exports = router;

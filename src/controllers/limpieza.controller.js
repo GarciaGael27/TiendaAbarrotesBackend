@@ -47,4 +47,56 @@ const getLimpiezaById = async (req, res) => {
     }
 };
 
-module.exports = { getLimpieza, postLimpieza, getLimpiezaById };
+const deleteLimpieza = async (req, res) => {
+    const { codigo_visual } = req.params;
+    try {
+        const producto = await Limpieza.findOne({
+            where: { codigo_visual: codigo_visual }
+        });
+
+        if (!producto) {
+            return res.status(404).json({
+                error: `Producto de limpieza con código ${codigo_visual} no encontrado`
+            });
+        }
+
+        await producto.destroy();
+        res.status(200).json({
+            msg: `Producto de limpieza ${codigo_visual} eliminado exitosamente`,
+            data: producto
+        });
+    } catch (error) {
+        res.status(500).json({
+            error: 'Error del servidor al eliminar producto de limpieza',
+            det: error.message
+        });
+    }
+};
+
+const updateLimpieza = async (req, res) => {
+    const { codigo_visual } = req.params;
+    try {
+        const producto = await Limpieza.findOne({
+            where: { codigo_visual: codigo_visual }
+        });
+
+        if (!producto) {
+            return res.status(404).json({
+                error: `Producto de limpieza con código ${codigo_visual} no encontrado`
+            });
+        }
+
+        await producto.update(req.body);
+        res.status(200).json({
+            msg: `Producto de limpieza ${codigo_visual} actualizado exitosamente`,
+            data: producto
+        });
+    } catch (error) {
+        res.status(500).json({
+            error: 'Error del servidor al actualizar producto de limpieza',
+            det: error.message
+        });
+    }
+};
+
+module.exports = { getLimpieza, postLimpieza, getLimpiezaById, deleteLimpieza, updateLimpieza };

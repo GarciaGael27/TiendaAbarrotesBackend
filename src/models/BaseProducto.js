@@ -7,6 +7,11 @@ const camposComunes = {
         primaryKey: true,
         autoIncrement: true
     },
+    codigo_visual: {
+        type: DataTypes.STRING(20),
+        allowNull: true, 
+        unique: true
+    },
     nombre: {
         type: DataTypes.STRING(100)
     },

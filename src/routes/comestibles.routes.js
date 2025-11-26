@@ -1,6 +1,6 @@
 const { Router } = require('express')
 const router = Router();
-const { getComestibles, postComestibles, getComestiblesById } = require('../controllers/comestibles.controller')
+const { getComestibles, postComestibles, getComestiblesById, deleteComestible, updateComestible } = require('../controllers/comestibles.controller')
 
 /**
  * @swagger
@@ -88,5 +88,79 @@ router.post('/', postComestibles);
  *         description: Error interno del servidor
  */
 router.get('/:id', getComestiblesById);
+
+/**
+ * @swagger
+ * /api/comestibles/{codigo_visual}:
+ *   delete:
+ *     summary: Eliminar producto comestible por código visual
+ *     tags: [Comestibles]
+ *     description: Endpoint para eliminar un producto comestible específico por su código visual
+ *     parameters:
+ *       - in: path
+ *         name: codigo_visual
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: Código visual del producto comestible (ej. COM-00011)
+ *     responses:
+ *       200:
+ *         description: Producto comestible eliminado exitosamente
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 msg:
+ *                   type: string
+ *                   example: "Producto comestible COM-00011 eliminado exitosamente"
+ *                 data:
+ *                   $ref: '#/components/schemas/Comestibles'
+ *       404:
+ *         description: Producto comestible no encontrado
+ *       500:
+ *         description: Error interno del servidor
+ */
+router.delete('/:codigo_visual', deleteComestible);
+
+/**
+ * @swagger
+ * /api/comestibles/{codigo_visual}:
+ *   put:
+ *     summary: Actualizar producto comestible por código visual
+ *     tags: [Comestibles]
+ *     description: Endpoint para actualizar un producto comestible específico por su código visual
+ *     parameters:
+ *       - in: path
+ *         name: codigo_visual
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: Código visual del producto comestible (ej. COM-00011)
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/Comestibles'
+ *     responses:
+ *       200:
+ *         description: Producto comestible actualizado exitosamente
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 msg:
+ *                   type: string
+ *                   example: "Producto comestible COM-00011 actualizado exitosamente"
+ *                 data:
+ *                   $ref: '#/components/schemas/Comestibles'
+ *       404:
+ *         description: Producto comestible no encontrado
+ *       500:
+ *         description: Error interno del servidor
+ */
+router.put('/:codigo_visual', updateComestible);
 
 module.exports = router;

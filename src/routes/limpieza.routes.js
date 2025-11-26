@@ -1,6 +1,6 @@
 const { Router } = require('express')
 const router = Router();
-const { getLimpieza, postLimpieza, getLimpiezaById } = require('../controllers/limpieza.controller')
+const { getLimpieza, postLimpieza, getLimpiezaById, deleteLimpieza, updateLimpieza } = require('../controllers/limpieza.controller')
 
 /**
  * @swagger
@@ -88,5 +88,79 @@ router.post('/', postLimpieza);
  *         description: Error interno del servidor
  */
 router.get('/:id', getLimpiezaById);
+
+/**
+ * @swagger
+ * /api/limpieza/{codigo_visual}:
+ *   delete:
+ *     summary: Eliminar producto de limpieza por código visual
+ *     tags: [Limpieza]
+ *     description: Endpoint para eliminar un producto de limpieza específico por su código visual
+ *     parameters:
+ *       - in: path
+ *         name: codigo_visual
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: Código visual del producto de limpieza (ej. LIM-00001)
+ *     responses:
+ *       200:
+ *         description: Producto de limpieza eliminado exitosamente
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 msg:
+ *                   type: string
+ *                   example: "Producto de limpieza LIM-00001 eliminado exitosamente"
+ *                 data:
+ *                   $ref: '#/components/schemas/Limpieza'
+ *       404:
+ *         description: Producto de limpieza no encontrado
+ *       500:
+ *         description: Error interno del servidor
+ */
+router.delete('/:codigo_visual', deleteLimpieza);
+
+/**
+ * @swagger
+ * /api/limpieza/{codigo_visual}:
+ *   put:
+ *     summary: Actualizar producto de limpieza por código visual
+ *     tags: [Limpieza]
+ *     description: Endpoint para actualizar un producto de limpieza específico por su código visual
+ *     parameters:
+ *       - in: path
+ *         name: codigo_visual
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: Código visual del producto de limpieza (ej. LIM-00001)
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/Limpieza'
+ *     responses:
+ *       200:
+ *         description: Producto de limpieza actualizado exitosamente
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 msg:
+ *                   type: string
+ *                   example: "Producto de limpieza LIM-00001 actualizado exitosamente"
+ *                 data:
+ *                   $ref: '#/components/schemas/Limpieza'
+ *       404:
+ *         description: Producto de limpieza no encontrado
+ *       500:
+ *         description: Error interno del servidor
+ */
+router.put('/:codigo_visual', updateLimpieza);
 
 module.exports = router;

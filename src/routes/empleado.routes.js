@@ -1,6 +1,6 @@
 const { Router } = require('express')
 const router = Router();
-const { getEmpleados, postEmpleado, getEmpleadoById } = require('../controllers/empleado.controller')
+const { getEmpleados, postEmpleado, getEmpleadoById, deleteEmpleado, updateEmpleado } = require('../controllers/empleado.controller')
 
 /**
  * @swagger
@@ -88,5 +88,79 @@ router.post('/', postEmpleado);
  *         description: Error interno del servidor
  */
 router.get('/:id', getEmpleadoById);
+
+/**
+ * @swagger
+ * /api/empleado/{curp}:
+ *   delete:
+ *     summary: Eliminar empleado por CURP
+ *     tags: [Empleados]
+ *     description: Endpoint para eliminar un empleado específico por su CURP
+ *     parameters:
+ *       - in: path
+ *         name: curp
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: CURP del empleado (ej. GAGA950827HDFRRL09)
+ *     responses:
+ *       200:
+ *         description: Empleado eliminado exitosamente
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 msg:
+ *                   type: string
+ *                   example: "Empleado con CURP GAGA950827HDFRRL09 eliminado exitosamente"
+ *                 data:
+ *                   $ref: '#/components/schemas/Empleado'
+ *       404:
+ *         description: Empleado no encontrado
+ *       500:
+ *         description: Error interno del servidor
+ */
+router.delete('/:curp', deleteEmpleado);
+
+/**
+ * @swagger
+ * /api/empleado/{curp}:
+ *   put:
+ *     summary: Actualizar empleado por CURP
+ *     tags: [Empleados]
+ *     description: Endpoint para actualizar un empleado específico por su CURP
+ *     parameters:
+ *       - in: path
+ *         name: curp
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: CURP del empleado (ej. GAGA950827HDFRRL09)
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/Empleado'
+ *     responses:
+ *       200:
+ *         description: Empleado actualizado exitosamente
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 msg:
+ *                   type: string
+ *                   example: "Empleado con CURP GAGA950827HDFRRL09 actualizado exitosamente"
+ *                 data:
+ *                   $ref: '#/components/schemas/Empleado'
+ *       404:
+ *         description: Empleado no encontrado
+ *       500:
+ *         description: Error interno del servidor
+ */
+router.put('/:curp', updateEmpleado);
 
 module.exports = router;
