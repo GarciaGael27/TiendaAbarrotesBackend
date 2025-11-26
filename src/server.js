@@ -30,17 +30,15 @@ const swaggerOptions = {
       }
     ]
   },
-  apis: ['./src/routes/*.js', './src/models/*.js'] // Archivos que contienen anotaciones Swagger
+  apis: ['./src/routes/*.js', './src/models/*.js'] 
 };
 
-// Generar especificación de Swagger
 const swaggerSpec = swaggerJsdoc(swaggerOptions);
 
 // Middlewares
 app.use(cors());
 app.use(express.json());
 
-// Configurar Swagger UI
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec, {
     customSiteTitle: "API Tienda de Abarrotes",
     customCss: '.swagger-ui .topbar { display: none }',
@@ -49,7 +47,6 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec, {
     }
 }));
 
-// Ruta de prueba
 app.get('/', (req, res) => {
     res.json({ 
         message: 'API Tienda de Abarrotes funcionando correctamente',
@@ -65,7 +62,6 @@ app.get('/', (req, res) => {
 // Función para inicializar modelos
 const inicializarModelos = async () => {
     try {        
-        // Cargar modelos PRIMERO (sin asociaciones)
         require('./models/Ropa');
         
         require('./models/Empleado');
@@ -77,7 +73,6 @@ const inicializarModelos = async () => {
         require('./models/Limpieza');
         
         
-        // DESPUÉS cargar las asociaciones
         const { definirAsociaciones } = require('./models/associations');
         definirAsociaciones();
         
@@ -87,7 +82,6 @@ const inicializarModelos = async () => {
     }
 };
 
-// Configuracion de rutas
 const cargarRutas = () => {
     try {
         const ropaRoutes = require('./routes/ropa.routes');
@@ -110,23 +104,17 @@ const cargarRutas = () => {
     }
 };
 
-// Inicializar servidor
 const inicializarServidor = async () => {
     try {
         console.log('Verificando conexión a base de datos...');
         
-        // Probar conexión
         await sequelize.authenticate();
         console.log('Conexión a PostgreSQL exitosa');
         
-        // Cargar modelos Y asociaciones
         await inicializarModelos();
         
-
-        // Cargar rutas
         cargarRutas();
         
-        // Iniciar servidor
         app.listen(PORT, () => {
             console.log(`Servidor corriendo en http://localhost:${PORT}`);
         });

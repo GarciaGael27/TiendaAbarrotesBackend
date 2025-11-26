@@ -1,5 +1,7 @@
 const Comestibles = require('../models/Comestibles');
 
+
+// Endpoint para obtener todos los comestibles
 const getComestibles = async (req, res) => {
     try {
         const comestibles = await Comestibles.findAll();
@@ -13,6 +15,7 @@ const getComestibles = async (req, res) => {
     }
 };
 
+// Endpoint para crear un nuevo comestible
 const postComestibles = async (req, res) => {
     try {
         const nuevoComestible = await Comestibles.create(req.body);
@@ -29,13 +32,16 @@ const postComestibles = async (req, res) => {
     }
 };
 
+// Endpoint para obtener un comestible por código visual
 const getComestiblesById = async (req, res) => {
-    const { id } = req.params;
+    const { id } = req.params; 
     try {
-        const comestible = await Comestibles.findByPk(id);
+        const comestible = await Comestibles.findOne({
+            where: { codigo_visual: id }
+        });
         if (!comestible) {
             return res.status(404).json({
-                msg: 'Comestible no encontrado'
+                msg: `Comestible con código ${id} no encontrado`
             });
         }
         res.status(200).json(comestible);
@@ -47,6 +53,7 @@ const getComestiblesById = async (req, res) => {
     }
 };
 
+// Endpoint para eliminar un comestible por código visual
 const deleteComestible = async (req, res) => {
     const { codigo_visual } = req.params;
     try {
@@ -73,6 +80,7 @@ const deleteComestible = async (req, res) => {
     }
 };
 
+// Endpoint para actualizar un comestible por código visual
 const updateComestible = async (req, res) => {
     const { codigo_visual } = req.params;
     try {

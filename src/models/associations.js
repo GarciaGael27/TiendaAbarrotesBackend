@@ -1,7 +1,6 @@
 const Empleado = require('./Empleado');
 const Venta = require('./Venta');
 
-// Definir todas las asociaciones aquí
 const definirAsociaciones = () => {
     try {
         // Un empleado puede tener muchas ventas

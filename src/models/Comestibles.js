@@ -3,7 +3,6 @@ const {Model, camposComunes} = require('./BaseProducto');
 const { DataTypes } = require('sequelize');
 
 class Comestibles extends Model{}
-
 /**
  * @swagger
  * components:

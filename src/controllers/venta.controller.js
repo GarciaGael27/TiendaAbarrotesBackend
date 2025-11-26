@@ -1,10 +1,11 @@
 const Venta = require('../models/Venta');
 const sequelize = require('../config/database');
 
+// Endpoint para obtener todas las ventas
 const getVentas = async (req, res) => {
     try {
         const ventas = await Venta.findAll({
-            include: ['empleado'] // Incluir información del empleado si hay relación
+            include: ['empleado'] 
         });
 
         res.status(200).json(ventas);
@@ -16,8 +17,8 @@ const getVentas = async (req, res) => {
     }
 };
 
+// Endpoint para crear una nueva venta
 const postVenta = async (req, res) => {
-// 1. El Frontend te manda esto:
     const { curp_vendedor, items } = req.body; 
     // items = [ { codigo_visual: "COM-00011", cantidad: 2 }, { codigo_visual: "COM-00012", cantidad: 1 } ]
 
@@ -25,15 +26,7 @@ const postVenta = async (req, res) => {
 
     try {
         const listaCompletaParaSQL = [];
-
-        // 2. Iteramos lo que mandó el usuario para buscar los datos reales en la BD
-        for (const item of items) {
-            
-            // NOTA: Como tienes herencia, buscar por ID es truculento. 
-            // Si tus IDs son únicos globalmente (SERIAL), puedes hacer una consulta raw o buscar en cada tabla.
-            // Para simplificar, asumiremos que sabes en qué tabla buscar o usas una vista, 
-            // pero aquí hago una búsqueda directa por SQL crudo para hallar el producto sea cual sea su tabla.
-            
+        for (const item of items) {            
             const [productoEncontrado] = await sequelize.query(
                 `SELECT * FROM productos WHERE codigo_visual = :id`, 
                 { 
@@ -46,26 +39,15 @@ const postVenta = async (req, res) => {
             if (!productoEncontrado) {
                 throw new Error(`Producto con ID ${item.id_prod} no encontrado`);
             }
-
-            // 3. Combinamos la info de la BD (precio, nombre) con la del usuario (cantidad)
-            // IMPORTANTE: Respetar el orden de columnas del TIPO 'productos' en Postgres:
-            // (id_prod, nombre, precio, marca, cantidad) <--- La cantidad aquí es la del stock o la de venta?
-            // En tu tipo compuesto, 'cantidad' suele referirse al stock, PERO en el contexto de venta
-            // tu trigger usa 'producto.cantidad' para multiplicar. 
-            // Así que debemos inyectar la cantidad DE VENTA en ese campo.
-
             listaCompletaParaSQL.push({
                 id_prod: productoEncontrado.id_prod,
                 nombre: productoEncontrado.nombre,
-                precio: productoEncontrado.precio, // Precio actual de la BD
+                precio: productoEncontrado.precio, 
                 marca: productoEncontrado.marca,
                 codigo_visual: productoEncontrado.codigo_visual,
-                cantidad: item.cantidad // <--- Usamos la cantidad que pidió el usuario
+                cantidad: item.cantidad 
             });
         }
-
-        // 4. Ahora sí, mandamos la lista completa a tu método especial
-        // (El que definimos en la respuesta anterior que usa ROW())
         const nuevaVenta = await Venta.crearVenta(curp_vendedor, listaCompletaParaSQL, t);
         console.log(listaCompletaParaSQL)
         await t.commit();
@@ -82,11 +64,12 @@ const postVenta = async (req, res) => {
     }
 };
 
+// Endpoint para obtener una venta por ID
 const getVentaById = async (req, res) => {
     const { id } = req.params;
     try {
         const venta = await Venta.findByPk(id, {
-            include: ['empleado'] // Incluir información del empleado si hay relación
+            include: ['empleado'] 
         });
         if (!venta) {
             return res.status(404).json({
@@ -102,6 +85,7 @@ const getVentaById = async (req, res) => {
     }
 };
 
+// Endpoint para eliminar una venta por ID
 const deleteVenta = async (req, res) => {
     const { id } = req.params;
     try {

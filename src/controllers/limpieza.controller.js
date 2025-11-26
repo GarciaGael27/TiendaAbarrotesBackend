@@ -1,5 +1,7 @@
 const Limpieza = require('../models/Limpieza');
 
+
+// Endpoint para obtener todos los productos de limpieza
 const getLimpieza = async (req, res) => {
     try {
         const productos = await Limpieza.findAll();
@@ -13,6 +15,7 @@ const getLimpieza = async (req, res) => {
     }
 };
 
+// Endpoint para crear un nuevo producto de limpieza
 const postLimpieza = async (req, res) => {
     try {
         const nuevoProducto = await Limpieza.create(req.body);
@@ -29,13 +32,16 @@ const postLimpieza = async (req, res) => {
     }
 };
 
+// Endpoint para obtener un producto de limpieza por código visual
 const getLimpiezaById = async (req, res) => {
-    const { id } = req.params;
+    const { id } = req.params; 
     try {
-        const producto = await Limpieza.findByPk(id);
+        const producto = await Limpieza.findOne({
+            where: { codigo_visual: id }
+        });
         if (!producto) {
             return res.status(404).json({
-                msg: 'Producto de limpieza no encontrado'
+                msg: `Producto de limpieza con código ${id} no encontrado`
             });
         }
         res.status(200).json(producto);
@@ -47,6 +53,7 @@ const getLimpiezaById = async (req, res) => {
     }
 };
 
+// Endpoint para eliminar un producto de limpieza por código visual
 const deleteLimpieza = async (req, res) => {
     const { codigo_visual } = req.params;
     try {
@@ -73,6 +80,7 @@ const deleteLimpieza = async (req, res) => {
     }
 };
 
+// Endpoint para actualizar un producto de limpieza por código visual
 const updateLimpieza = async (req, res) => {
     const { codigo_visual } = req.params;
     try {

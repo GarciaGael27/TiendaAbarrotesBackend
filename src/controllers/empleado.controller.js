@@ -1,5 +1,7 @@
 const Empleado = require('../models/Empleado');
 
+
+// Endpoint para obtener todos los empleados
 const getEmpleados = async (req, res) => {
     try {
         const empleados = await Empleado.findAll();
@@ -13,6 +15,7 @@ const getEmpleados = async (req, res) => {
     }
 };
 
+// Endpoint para crear un nuevo empleado
 const postEmpleado = async (req, res) => {
     try {
         const nuevoEmpleado = await Empleado.create(req.body);
@@ -29,13 +32,16 @@ const postEmpleado = async (req, res) => {
     }
 };
 
+// Endpoint para obtener un empleado por CURP
 const getEmpleadoById = async (req, res) => {
-    const { id } = req.params;
+    const { id } = req.params; 
     try {
-        const empleado = await Empleado.findByPk(id);
+        const empleado = await Empleado.findOne({
+            where: { curp: id }
+        });
         if (!empleado) {
             return res.status(404).json({
-                msg: 'Empleado no encontrado'
+                msg: `Empleado con CURP ${id} no encontrado`
             });
         }
         res.status(200).json(empleado);
@@ -47,6 +53,7 @@ const getEmpleadoById = async (req, res) => {
     }
 };
 
+// Endpoint para eliminar un empleado por CURP
 const deleteEmpleado = async (req, res) => {
     const { curp } = req.params;
     try {
@@ -73,6 +80,7 @@ const deleteEmpleado = async (req, res) => {
     }
 };
 
+// Endpoint para actualizar un empleado por CURP
 const updateEmpleado = async (req, res) => {
     const { curp } = req.params;
     try {

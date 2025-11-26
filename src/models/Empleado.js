@@ -94,13 +94,11 @@ Empleado.init({
         allowNull: false
     },
     nombre: {
-        type: DataTypes.STRING, // Cambiar a STRING para que Sequelize lo maneje
+        type: DataTypes.STRING,
         allowNull: false,
         get() {
-            // Getter personalizado para parsear el tipo compuesto
             const rawValue = this.getDataValue('nombre');
             if (typeof rawValue === 'string' && rawValue.startsWith('(')) {
-                // Formato PostgreSQL: (valor1,valor2,valor3)
                 const content = rawValue.slice(1, -1);
                 const parts = content.split(',').map(part => part.trim().replace(/"/g, ''));
                 return {
@@ -112,7 +110,6 @@ Empleado.init({
             return rawValue;
         },
         set(value) {
-            // Setter personalizado para convertir objeto a formato PostgreSQL
             if (typeof value === 'object' && value !== null) {
                 const formatted = `("${value.nombre || ''}","${value.apellido_paterno || ''}","${value.apellido_materno || ''}")`;
                 this.setDataValue('nombre', formatted);

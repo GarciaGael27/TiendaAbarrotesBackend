@@ -65,16 +65,16 @@ router.post('/', postLimpieza);
  * @swagger
  * /api/limpieza/{id}:
  *   get:
- *     summary: Obtener producto de limpieza por ID
+ *     summary: Obtener producto de limpieza por código visual
  *     tags: [Limpieza]
- *     description: Endpoint para obtener un producto de limpieza específico por su ID
+ *     description: Endpoint para obtener un producto de limpieza específico por su código visual
  *     parameters:
  *       - in: path
  *         name: id
  *         schema:
- *           type: integer
+ *           type: string
  *         required: true
- *         description: ID del producto de limpieza
+ *         description: Código visual del producto de limpieza (ej. LIM-00001)
  *     responses:
  *       200:
  *         description: Producto de limpieza encontrado exitosamente

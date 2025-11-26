@@ -1,18 +1,19 @@
 const Ropa = require('../models/Ropa');
 
+// Endpoint para obtener todas las prendas de ropa
 const getRopa = async (req, res) => {
     try {
         const ropas = await Ropa.findAll();
 
         res.status(200).json(ropas);
     } catch (error) {
-        // Error al obtener ropa
         res.status(500).json({
             error: 'Error al obtener ropa', 
             det: error.message});
     }
 };
 
+// Endpoint para crear una nueva prenda de ropa
 const postRopa = async (req, res) =>{
     try {
         const nuevaRopa = await Ropa.create(req.body)
@@ -29,23 +30,28 @@ const postRopa = async (req, res) =>{
     }
 };
 
+// Endpoint para obtener una prenda de ropa por código visual
 const getRopaById = async (req, res) => {
-    const { id } = req.params;
+    const { id } = req.params; 
     try {
-        const prenda = await Ropa.findByPk(id);
+        const prenda = await Ropa.findOne({
+            where: { codigo_visual: id }
+        });
         if(!prenda){
             return res.status(404).json({
-                msg: 'Prenda no encontrada'
+                msg: `Prenda con código ${id} no encontrada`
             })
         }
         res.status(200).json(prenda)
     } catch (error) {
         res.status(500).json({
-            error: 'Error en servidor'
+            error: 'Error en servidor',
+            det: error.message
         })
     }
 };
 
+// Endpoint para eliminar una prenda de ropa por código visual
 const deleteRopa = async (req, res) => {
     const { codigo_visual } = req.params;
     try {
@@ -72,6 +78,7 @@ const deleteRopa = async (req, res) => {
     }
 };
 
+// Endpoint para actualizar una prenda de ropa por código visual
 const updateRopa = async (req, res) => {
     const { codigo_visual } = req.params;
     try {

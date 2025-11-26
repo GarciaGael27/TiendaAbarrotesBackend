@@ -74,7 +74,7 @@ router.post('/', postEmpleado);
  *         schema:
  *           type: string
  *         required: true
- *         description: CURP del empleado
+ *         description: CURP del empleado (ej. GAGA950827HDFRRL09)
  *     responses:
  *       200:
  *         description: Empleado encontrado exitosamente

@@ -1,6 +1,6 @@
 const { Model, DataTypes} = require('sequelize');
 
-
+// Campos comunes para todos los productos (Herencia para postgres)
 const camposComunes = {
     id_prod: {
         type: DataTypes.INTEGER,

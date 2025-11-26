@@ -65,16 +65,16 @@ router.post('/', postComestibles);
  * @swagger
  * /api/comestibles/{id}:
  *   get:
- *     summary: Obtener producto comestible por ID
+ *     summary: Obtener producto comestible por código visual
  *     tags: [Comestibles]
- *     description: Endpoint para obtener un producto comestible específico por su ID
+ *     description: Endpoint para obtener un producto comestible específico por su código visual
  *     parameters:
  *       - in: path
  *         name: id
  *         schema:
- *           type: integer
+ *           type: string
  *         required: true
- *         description: ID del producto comestible
+ *         description: Código visual del producto comestible (ej. COM-00011)
  *     responses:
  *       200:
  *         description: Producto comestible encontrado exitosamente

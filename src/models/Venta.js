@@ -2,26 +2,20 @@ const sequelize = require('../config/database');
 const { Model, DataTypes } = require('sequelize');
 
 class Venta extends Model {
-
-    // Función auxiliar para evitar errores con comillas (SQL Injection simple)
     static escapar(texto) {
         if (!texto) return '';
-        // Reemplaza una comilla simple ' por dos '' (así se escapa en SQL)
         return texto.toString().replace(/'/g, "''");
     }
 
     static async crearVenta(curpVendedor, listaProductos, transaccion) {
-        // Mapeamos el array de objetos a un string literal de Postgres ROW()
         const filas = listaProductos.map(p => {
             const nombreSafe = Venta.escapar(p.nombre);
             const marcaSafe = Venta.escapar(p.marca);
 
-            // Construimos la fila exacta: ROW(id, nombre, precio, marca, cantidad)
-            // IMPORTANTE: El orden de campos debe coincidir con la definición de tabla 'productos'
+
             return `ROW(${p.id_prod}, '${nombreSafe}', ${p.precio}, '${marcaSafe}', ${p.cantidad}, '"${p.id_prod}"')::productos`;
         }).join(',');
 
-        // El string final se ve como: ARRAY[ROW(...)::productos, ROW(...)::productos]
         const queryLiteral = `ARRAY[${filas}]`;
 
         const sql = `
@@ -30,14 +24,12 @@ class Venta extends Model {
             RETURNING id_venta, total, vendedor;
         `;
         
-        // Ejecutamos la inserción raw
         const resultado = await sequelize.query(sql, {
             replacements: { curp: curpVendedor },
             type: sequelize.QueryTypes.INSERT,
             transaction: transaccion
         });
 
-        // Postgres devuelve un array de arrays [[resultado, meta]]
         return resultado[0][0]; 
     }
 }
