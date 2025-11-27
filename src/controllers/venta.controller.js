@@ -22,6 +22,29 @@ const postVenta = async (req, res) => {
     const { curp_vendedor, items } = req.body; 
     // items = [ { codigo_visual: "COM-00011", cantidad: 2 }, { codigo_visual: "COM-00012", cantidad: 1 } ]
 
+    // Validaciones
+    if (!curp_vendedor) {
+        return res.status(400).json({
+            error: 'El CURP del vendedor es requerido'
+        });
+    }
+
+    if (!items || !Array.isArray(items) || items.length === 0) {
+        return res.status(400).json({
+            error: 'La lista de items es requerida y debe ser un array con al menos un elemento'
+        });
+    }
+
+    // Validar estructura de cada item
+    for (let i = 0; i < items.length; i++) {
+        const item = items[i];
+        if (!item.codigo_visual || !item.cantidad || item.cantidad <= 0) {
+            return res.status(400).json({
+                error: `El item en posición ${i + 1} debe tener codigo_visual y cantidad (mayor a 0)`
+            });
+        }
+    }
+
     const t = await sequelize.transaction();
 
     try {
